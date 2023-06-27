@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Placeholder from "react-bootstrap/Placeholder";
 import Modal from "react-bootstrap/Modal";
-import { ListGroup } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ListGroup from "react-bootstrap/ListGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 
 const apiKey = process.env.REACT_APP_API_KEY;
 
@@ -12,10 +12,6 @@ function WeatherCard() {
   const [response, setResponse] = useState(null);
   const [isLocationDenied, setLocationDenied] = useState(false);
   const [temperatureMode, setTemperatureMode] = useState("fahrenheit");
-  const [fahrenheitTemperatureVariant, setFahrenheitTemperatureVariant] =
-    useState("success");
-  const [celsiusTemperatureVariant, setCelsiusTemperatureVariant] =
-    useState("primary");
 
   const getWeatherInfo = (latitude, longitude) => {
     const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${latitude},${longitude}&aqi=no`;
@@ -43,16 +39,8 @@ function WeatherCard() {
     maximumAge: 0,
   };
 
-  const fahrenheitButtonClick = () => {
-    setTemperatureMode("fahrenheit");
-    setFahrenheitTemperatureVariant("success");
-    setCelsiusTemperatureVariant("primary");
-  };
-
-  const celsiusButtonClick = () => {
-    setTemperatureMode("celsius");
-    setCelsiusTemperatureVariant("success");
-    setFahrenheitTemperatureVariant("primary");
+  const handleChange = (value) => {
+    setTemperatureMode(value);
   };
 
   useEffect(() => {
@@ -71,20 +59,20 @@ function WeatherCard() {
 
   return (
     <>
-      <ButtonGroup style={{ margin: "1% 0 1% 0" }}>
-        <Button
-          variant={fahrenheitTemperatureVariant}
-          onClick={fahrenheitButtonClick}
-        >
+      <ToggleButtonGroup
+        type="radio"
+        name="temperatureModeToggle"
+        value={temperatureMode}
+        onChange={handleChange}
+        style={{ margin: "1% 0 1% 0" }}
+      >
+        <ToggleButton id="fahrenheit" value="fahrenheit">
           Fahrenheit
-        </Button>
-        <Button
-          variant={celsiusTemperatureVariant}
-          onClick={celsiusButtonClick}
-        >
+        </ToggleButton>
+        <ToggleButton id="celsius" value="celsius">
           Celsius
-        </Button>
-      </ButtonGroup>
+        </ToggleButton>
+      </ToggleButtonGroup>
       <div className="d-flex justify-content-around">
         {isLocationDenied && (
           <Modal
